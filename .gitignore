@@ -1,0 +1,19 @@
+# Unity .gitignore
+
+# Directories
+
+/[Bb]uild/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Bb]uilds/
+.vs/
+
+
+# File Types
+
+.DS_Store
+*.sln
+*.userprefs
+*.csproj*
+*.pidb
+*.unitypackage*
