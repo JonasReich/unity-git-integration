@@ -77,18 +77,30 @@ namespace GitIntegration
 						{
 							var substrings = file.path.Split('/');
 							if (file.path.EndsWith("/"))
+							{
+								file.path = file.path.Remove(file.path.Length - 1);
 								file.name = substrings[substrings.Length - 2] + "/";
+							}
 							else
 								file.name = substrings[substrings.Length - 1];
 						}
 
-						file.path = "\"" + file.path + "\"";
+						if (file.path.Contains("Assets"))
+						{
+							file.isUnityFile = true;
+						}
+						if (file.path.EndsWith(".meta"))
+						{
+							file.isMetaFile = true;
+						}
 
+						file.path = "\"" + file.path + "\"";
+						
 						if (file.status_string.StartsWith("#"))
 						{
 							continue;
 						}
-
+						
 						if (file.status_string[0] == '?')
 						{
 							file.status |= (uint)EStatus.Untracked;
@@ -176,6 +188,23 @@ namespace GitIntegration
 		}
 
 
+		public static void Add(File file)
+		{
+			if (file.isMetaFile)
+			{
+				Command("add " + file.path + " " + file.path.Replace(".meta", ""));
+			}
+			else if(file.isUnityFile)
+			{
+				Command("add " + file.path + " \"" + file.path.Replace("\"", "") + ".meta\"");
+			}
+			else
+			{
+				Command("add " + file.path);
+			}
+		}
+
+
 		static bool UpdateCurrentSelectionPath()
 		{
 			var path = "";
@@ -198,12 +227,19 @@ namespace GitIntegration
 			var path = AssetDatabase.GUIDToAssetPath(guid);
 			//if (!AssetDatabase.IsValidFolder(path)) return;
 
+			//selectionRect.x = selectionRect.width;
 			selectionRect.height = selectionRect.width = 16;
 
 			foreach (var file in files)
 			{
 				if (path.Contains(file.path.Replace("\"", "")))
-					GUI.DrawTexture(selectionRect, texture);
+				{
+					GUIStyle style = new GUIStyle("Box");
+					style.fontSize = 8;
+					style.fontStyle = FontStyle.Bold;
+					GUI.Box(selectionRect, file.status_string, style);
+					//GUI.DrawTexture(selectionRect, texture);
+				}
 			}
 		}
 
@@ -214,6 +250,8 @@ namespace GitIntegration
 			public string path;
 			public string status_string;
 			public uint status = (uint)EStatus.None;
+			public bool isUnityFile;
+			public bool isMetaFile;
 
 			public bool HasStatus(EStatus status)
 			{

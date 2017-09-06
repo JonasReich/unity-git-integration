@@ -90,7 +90,7 @@ namespace GitIntegration
 					GUILayout.Label(gitFile.name, GUILayout.Width(300));
 					if (GUILayout.Button("+", GUILayout.Width(20)))
 					{
-						Git.Command("add " + gitFile.path);
+						Git.Add(gitFile);
 						EditorGUILayout.EndHorizontal();
 						repaintAsap = true;
 						break;
