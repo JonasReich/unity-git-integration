@@ -133,7 +133,7 @@ namespace GitIntegration
 			}
 
 			EditorGUILayout.EndHorizontal();
-			outputScrollPosition = GUILayout.BeginScrollView(outputScrollPosition, GUILayout.Height(150));
+			outputScrollPosition = GUILayout.BeginScrollView(outputScrollPosition);
 			GUILayout.TextArea(Git.output, GUILayout.ExpandHeight(true));
 			GUILayout.EndScrollView();
 		}
