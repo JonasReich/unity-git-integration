@@ -258,31 +258,20 @@ namespace GitIntegration
 			public void UpdateStatus()
 			{
 				if (status_string[0] == '!')
-				{
 					status |= (uint)EStatus.Ignored;
-				}
 				else if (status_string[0] == '?')
-				{
 					status |= (uint)EStatus.Untracked;
-				}
-				else if (status_string[0] != ' ')
-				{
-					status |= (uint)EStatus.HasStagedChanges;
-				}
-
-				if (status_string[0] == 'R')
-				{
+				else if (status_string[0] == 'R')
 					status |= (uint)EStatus.Renamed;
-				}
 				else if (status_string[0] == 'D')
-				{
 					status |= (uint)EStatus.Deleted;
-				}
-
+				else if (status_string[0] != ' ')
+					status |= (uint)EStatus.HasStagedChanges;
+				else if (status_string.Contains("U") || status_string == "AA" || status_string == "DD")
+					status |= (uint)EStatus.Unresolved;
+				
 				if (status_string[1] != ' ' && status_string[1] != '!')
-				{
 					status |= (uint)EStatus.HasUnstagedChanges;
-				}
 			}
 		}
 
