@@ -30,10 +30,8 @@ namespace GitIntegration
 		static Git()
 		{
 			EditorApplication.projectWindowItemOnGUI += ProjectWindowItemOnGui;
-			EditorApplication.projectWindowChanged += delegate
-			{
-				dirty = true;
-			};
+			EditorApplication.projectWindowChanged += delegate { dirty = true; };
+			
 			addedTexture = Resources.Load<Texture>("GitIcons/added");
 			ignoredTexture = Resources.Load<Texture>("GitIcons/ignored");
 			modifiedTexture = Resources.Load<Texture>("GitIcons/modified");
@@ -56,121 +54,51 @@ namespace GitIntegration
 			}
 
 			if (UpdateCurrentSelectionPath())
-			{
 				dirty = true;
-			}
-
-			// -
 
 			if (process != null && process.HasExited == false)
+				ReadGitOutput();
+		}
+
+		static void ProjectWindowItemOnGui(string guid, Rect selectionRect)
+		{
+			var path = AssetDatabase.GUIDToAssetPath(guid);
+
+			selectionRect.height = selectionRect.width = 16;
+			foreach (var file in files)
 			{
-				if (process.StartInfo.Arguments.Contains("status --porcelain --ignored"))
+				bool isMatchingFile = path.Contains(file.path.Replace("\"", ""));
+				bool isMatchingFolderMetaFile = file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""));
+				if (isMatchingFile || isMatchingFolderMetaFile)
 				{
-					string line = "";
-
-					while (process.StandardOutput.EndOfStream == false)
+					if (file.HasStatus(EStatus.Untracked))
 					{
-						line = process.StandardOutput.ReadLine();
-						File file = new File();
-
-						file.status_string = line.Substring(0, 2);
-						file.path += line.Substring(3);
-
-						file.path = file.path.Replace("\"", "");
-						file.path = file.path.Trim();
-
-						{
-							var substrings = file.path.Split('/');
-							if (file.path.EndsWith("/"))
-							{
-								file.path = file.path.Remove(file.path.Length - 1);
-								file.name = substrings[substrings.Length - 2] + "/";
-							}
-							else
-								file.name = substrings[substrings.Length - 1];
-						}
-
-						if (file.path.Contains("Assets"))
-						{
-							file.isUnityFile = true;
-						}
-						if (AssetDatabase.IsValidFolder(file.path.Replace(".meta", "")))
-						{
-							file.isFolder = true;
-						}
-						if (file.path.EndsWith(".meta"))
-						{
-							file.isMetaFile = true;
-						}
-
-						file.path = "\"" + file.path + "\"";
-
-						if (file.status_string.StartsWith("#"))
-						{
-							continue;
-						}
-
-						if (file.status_string[0] == '!')
-						{
-							file.status |= (uint)EStatus.Ignored;
-						}
-						else if (file.status_string[0] == '?')
-						{
-							file.status |= (uint)EStatus.Untracked;
-						}
-						else if (file.status_string[0] != ' ')
-						{
-							file.status |= (uint)EStatus.HasStagedChanges;
-						}
-
-						if (file.status_string[0] == 'R')
-						{
-							file.status |= (uint)EStatus.Renamed;
-						}
-						else if (file.status_string[0] == 'D')
-						{
-							file.status |= (uint)EStatus.Deleted;
-						}
-
-						if (line[1] != ' ' && line[1] != '!')
-						{
-							file.status |= (uint)EStatus.HasUnstagedChanges;
-						}
-
-						files.Add(file);
+						GUI.DrawTexture(selectionRect, untrackedTexture);
 					}
-				}
-				else
-				{
-
-					string newLine = process.StandardOutput.ReadToEnd();
-					if (newLine != "")
+					else if (file.HasStatus(EStatus.HasStagedChanges))
 					{
-						Debug.Log(newLine);
-						output += newLine;
-					}
-					while (process.StandardError.EndOfStream == false)
-					{
-						string newError = process.StandardError.ReadLine();
-						if (newError != "")
+						if (file.HasStatus(EStatus.HasUnstagedChanges))
 						{
-							if (newError.Contains("warning:") && newError.Contains("will be replaced by"))
-							{
-								newError += "\n" + process.StandardError.ReadLine();
-								Debug.LogWarning("git " + newError + "/n");
-							}
-							else
-							{
-								Debug.LogError("git " + newError + "/n");
-							}
-							output += newError;
+							GUI.DrawTexture(selectionRect, modifiedAddedTexture);
+						}
+						else
+						{
+							GUI.DrawTexture(selectionRect, addedTexture);
 						}
 					}
-
+					else if (file.HasStatus(EStatus.HasUnstagedChanges))
+					{
+						GUI.DrawTexture(selectionRect, modifiedTexture);
+					}
+					else if (file.HasStatus(EStatus.Ignored))
+					{
+						GUI.DrawTexture(selectionRect, ignoredTexture);
+					}
 				}
 			}
 		}
 
+		
 		public static bool IsReady()
 		{
 			return (process != null && process.HasExited == true) || process == null;
@@ -204,71 +132,110 @@ namespace GitIntegration
 		public static void Add(File file)
 		{
 			if (file.isMetaFile)
-			{
 				Command("add " + file.path + " " + file.path.Replace(".meta", ""));
-			}
 			else if (file.isUnityFile)
-			{
 				Command("add " + file.path + " \"" + file.path.Replace("\"", "") + ".meta\"");
-			}
 			else
-			{
 				Command("add " + file.path);
-			}
 		}
-
-
-		static bool UpdateCurrentSelectionPath()
+		
+		
+		static void ReadGitOutput()
 		{
-			var path = "";
-			var obj = Selection.activeObject;
-			if (obj == null) path = "Assets";
-			else path = AssetDatabase.GetAssetPath(obj.GetInstanceID());
-			if (currentSelectionPath == path)
+			if (process.StartInfo.Arguments.Contains("status --porcelain --ignored"))
 			{
-				return false;
+				while (process.StandardOutput.EndOfStream == false)
+				{
+					var file = CreateFileFromStatusLine(process.StandardOutput.ReadLine());
+					if (file != null)
+						files.Add(file);
+				}
 			}
 			else
 			{
-				currentSelectionPath = path;
-				return true;
-			}
-		}
-
-		static void ProjectWindowItemOnGui(string guid, Rect selectionRect)
-		{
-			var path = AssetDatabase.GUIDToAssetPath(guid);
-
-			selectionRect.height = selectionRect.width = 16;
-			foreach (var file in files)
-			{
-				if (path.Contains(file.path.Replace("\"", "")) || (file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""))))
+				// Read standard output at once
+				string standardLogOutput = process.StandardOutput.ReadToEnd();
+				if (standardLogOutput != "")
 				{
-					if (file.HasStatus(EStatus.Untracked))
+					Debug.Log(standardLogOutput);
+					output += standardLogOutput;
+				}
+				// Read error output line by line
+				while (process.StandardError.EndOfStream == false)
+				{
+					string errorLine = process.StandardError.ReadLine();
+					if (errorLine != "")
 					{
-						GUI.DrawTexture(selectionRect, untrackedTexture);
-					}
-					else if (file.HasStatus(EStatus.HasStagedChanges))
-					{
-						if (file.HasStatus(EStatus.HasUnstagedChanges))
+						if (errorLine.Contains("warning:") && errorLine.Contains("will be replaced by"))
 						{
-							GUI.DrawTexture(selectionRect, modifiedAddedTexture);
+							errorLine += "\n" + process.StandardError.ReadLine();
+							Debug.LogWarning("git " + errorLine + "/n");
 						}
 						else
 						{
-							GUI.DrawTexture(selectionRect, addedTexture);
+							Debug.LogError("git " + errorLine + "/n");
 						}
-					}
-					else if (file.HasStatus(EStatus.HasUnstagedChanges))
-					{
-						GUI.DrawTexture(selectionRect, modifiedTexture);
-					}
-					else if (file.HasStatus(EStatus.Ignored))
-					{
-						GUI.DrawTexture(selectionRect, ignoredTexture);
+						output += errorLine;
 					}
 				}
 			}
+		}
+
+		static File CreateFileFromStatusLine(string newLine)
+		{
+			File file = new File();
+
+			file.status_string = newLine.Substring(0, 2);
+
+			// Can't create file from comments
+			if (file.status_string.StartsWith("#")) return null;
+
+
+			file.path = newLine.Substring(3);
+
+			// Remove quotation marks and whitespace
+			file.path = file.path.Replace("\"", "");
+			file.path = file.path.Trim();
+
+			{
+				var substrings = file.path.Split('/');
+				if (file.path.EndsWith("/")) // is folder
+				{
+					file.path = file.path.Remove(file.path.Length - 1);
+					file.name = substrings[substrings.Length - 2] + "/";
+					file.isFolder = true;
+				}
+				else // is file
+					file.name = substrings[substrings.Length - 1];
+			}
+
+			if (file.path.Contains("Assets"))
+				file.isUnityFile = true;
+
+			if (file.path.EndsWith(".meta"))
+				file.isMetaFile = true;
+
+			file.path = "\"" + file.path + "\"";
+
+			file.UpdateStatus();
+			return file;
+		}
+
+		/// <summary>
+		/// Update the currentSelectionPath member 
+		/// </summary>
+		/// <returns>
+		/// Has currentSelectionPath changed?
+		/// </returns>
+		static bool UpdateCurrentSelectionPath()
+		{
+			string path = (Selection.activeObject == null) ? "Assets" : AssetDatabase.GetAssetPath(Selection.activeObject.GetInstanceID());
+
+			if (currentSelectionPath == path)
+				return false;
+
+			currentSelectionPath = path;
+			return true;
 		}
 
 
@@ -283,6 +250,39 @@ namespace GitIntegration
 			public bool HasStatus(EStatus status)
 			{
 				return (this.status & (uint)status) == (uint)status;
+			}
+
+			/// <summary>
+			/// Set status flag from status string
+			/// </summary>
+			public void UpdateStatus()
+			{
+				if (status_string[0] == '!')
+				{
+					status |= (uint)EStatus.Ignored;
+				}
+				else if (status_string[0] == '?')
+				{
+					status |= (uint)EStatus.Untracked;
+				}
+				else if (status_string[0] != ' ')
+				{
+					status |= (uint)EStatus.HasStagedChanges;
+				}
+
+				if (status_string[0] == 'R')
+				{
+					status |= (uint)EStatus.Renamed;
+				}
+				else if (status_string[0] == 'D')
+				{
+					status |= (uint)EStatus.Deleted;
+				}
+
+				if (status_string[1] != ' ' && status_string[1] != '!')
+				{
+					status |= (uint)EStatus.HasUnstagedChanges;
+				}
 			}
 		}
 

@@ -5,13 +5,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
 using Debug = UnityEngine.Debug;
 
 namespace GitIntegration
@@ -22,26 +17,45 @@ namespace GitIntegration
 	public class GitEditorWindow : EditorWindow
 	{
 		public static GitEditorWindow Window;
-		
+
 		[MenuItem("Window/Git")]
 		static void OpenWindow()
 		{
 			Window = GetWindow<GitEditorWindow>("Git");
 		}
-		
+
 		bool repaintAsap = false;
 		string commitMessage = "";
 		Vector2 outputScrollPosition, stageScrollPosition, unstageScrollPosition;
-		
-		void OnGUI()
+
+
+		void Update()
 		{
-			if (GUILayout.Button("test"))
+			if (repaintAsap && Git.IsReady())
 			{
 				Git.RefreshStatus();
+				repaintAsap = false;
+				Repaint();
 			}
 
-			EditorGUILayout.Space();
+			Git.Update();
+		}
 
+		void OnGUI()
+		{
+			EditorGUILayout.Space();
+			StagingArea();
+			EditorGUILayout.Space();
+			ChangesArea();
+			EditorGUILayout.Space();
+			CommitMessageArea();
+			EditorGUILayout.Space();
+			LogArea();
+		}
+
+
+		void StagingArea()
+		{
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("Staged Changes");
 			if (GUILayout.Button(new GUIContent("-", "Unstage all files"), GUILayout.Width(20)) && Git.IsReady())
@@ -69,9 +83,10 @@ namespace GitIntegration
 				}
 			}
 			GUILayout.EndScrollView();
+		}
 
-			EditorGUILayout.Space();
-
+		void ChangesArea()
+		{
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("Changes");
 			if (GUILayout.Button(new GUIContent("+", "Stage all changed files"), GUILayout.Width(20)) && Git.IsReady())
@@ -99,28 +114,37 @@ namespace GitIntegration
 				}
 			}
 			GUILayout.EndScrollView();
+		}
 
-			EditorGUILayout.Space();
-
+		void CommitMessageArea()
+		{
 			commitMessage = EditorGUILayout.TextArea(commitMessage, GUILayout.Height(75));
 			EditorGUILayout.BeginHorizontal();
 			if (GUILayout.Button("Commit"))
 			{
-				if (commitMessage != "")
+				if (Git.files.Find(file => file.HasStatus(Git.EStatus.HasStagedChanges)) != null)
 				{
-					Git.Command("commit -m \"" + commitMessage + "\"");
-					commitMessage = "";
-					repaintAsap = true;
+					if (commitMessage != "")
+					{
+						Git.Command("commit -m \"" + commitMessage + "\"");
+						commitMessage = "";
+						repaintAsap = true;
+					}
+					else
+					{
+						Debug.LogError("Please provide a message before commiting");
+					}
 				}
 				else
 				{
-					Debug.LogError("Please provide a message before commiting");
+					Debug.LogWarning("Nothing to commit");
 				}
 			}
 			EditorGUILayout.EndHorizontal();
+		}
 
-			EditorGUILayout.Space();
-
+		void LogArea()
+		{
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("Log:");
 			if (GUILayout.Button("Clear", GUILayout.Width(80)))
@@ -136,18 +160,6 @@ namespace GitIntegration
 			outputScrollPosition = GUILayout.BeginScrollView(outputScrollPosition);
 			GUILayout.TextArea(Git.output, GUILayout.ExpandHeight(true));
 			GUILayout.EndScrollView();
-		}
-		
-		void Update()
-		{
-			if (repaintAsap && Git.IsReady())
-			{
-				Git.RefreshStatus();
-				repaintAsap = false;
-				Repaint();
-			}
-
-			Git.Update();
 		}
 	}
 }
