@@ -148,11 +148,11 @@ namespace GitIntegration
 							if (newError.Contains("warning:") && newError.Contains("will be replaced by"))
 							{
 								newError += "\n" + process.StandardError.ReadLine();
-								Debug.LogWarning(newError);
+								Debug.LogWarning("git " + newError + "/n");
 							}
 							else
 							{
-								Debug.LogError(newError);
+								Debug.LogError("git " + newError + "/n");
 							}
 							output += newError;
 						}
