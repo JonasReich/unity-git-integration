@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="git-icons.svg"
-   inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\untracked.png"
+   inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\ignored.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -30,7 +30,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="16.000001"
      inkscape:cx="36.643842"
-     inkscape:cy="24.09423"
+     inkscape:cy="19.09423"
      inkscape:document-units="px"
      inkscape:current-layer="layer7"
      showgrid="false"
