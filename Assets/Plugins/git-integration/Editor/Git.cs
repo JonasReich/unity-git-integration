@@ -22,7 +22,7 @@ namespace GitIntegration
 		public static Process process;
 		public static List<File> files = new List<File>();
 
-		static Texture texture;
+		static Texture addedTexture, modifiedTexture, modifiedAddedTexture, unresolvedTexture, untrackedTexture;
 		static bool dirty = false;
 		static string currentSelectionPath = "";
 
@@ -34,7 +34,11 @@ namespace GitIntegration
 			{
 				dirty = true;
 			};
-			texture = Resources.Load<Texture>("GitIcons/added");
+			addedTexture = Resources.Load<Texture>("GitIcons/added");
+			modifiedTexture = Resources.Load<Texture>("GitIcons/modified");
+			modifiedAddedTexture = Resources.Load<Texture>("GitIcons/modifiedAdded");
+			unresolvedTexture = Resources.Load<Texture>("GitIcons/unresolved");
+			untrackedTexture = Resources.Load<Texture>("GitIcons/untracked");
 
 			RefreshStatus();
 		}
@@ -225,20 +229,39 @@ namespace GitIntegration
 		static void ProjectWindowItemOnGui(string guid, Rect selectionRect)
 		{
 			var path = AssetDatabase.GUIDToAssetPath(guid);
-			//if (!AssetDatabase.IsValidFolder(path)) return;
+			//if (AssetDatabase.IsValidFolder(path)) return;
 
-			//selectionRect.x = selectionRect.width;
 			selectionRect.height = selectionRect.width = 16;
 
 			foreach (var file in files)
 			{
 				if (path.Contains(file.path.Replace("\"", "")))
 				{
+					/*
 					GUIStyle style = new GUIStyle("Box");
 					style.fontSize = 8;
 					style.fontStyle = FontStyle.Bold;
 					GUI.Box(selectionRect, file.status_string, style);
-					//GUI.DrawTexture(selectionRect, texture);
+					*/
+					if (file.HasStatus(EStatus.Untracked))
+					{
+						GUI.DrawTexture(selectionRect, untrackedTexture);
+					}
+					else if (file.HasStatus(EStatus.HasStagedChanges))
+					{
+						if (file.HasStatus(EStatus.HasUnstagedChanges))
+						{
+							GUI.DrawTexture(selectionRect, modifiedAddedTexture);
+						}
+						else
+						{
+							GUI.DrawTexture(selectionRect, addedTexture);
+						}
+					}
+					else if (file.HasStatus(EStatus.HasUnstagedChanges))
+					{
+						GUI.DrawTexture(selectionRect, modifiedTexture);
+					}
 				}
 			}
 		}
@@ -265,17 +288,13 @@ namespace GitIntegration
 			None = 0,
 			Untracked = 1 << 0,
 
-			Unmodified = 1 << 1,
-			Modified = 1 << 2,
+			HasStagedChanges = 1 << 1,
+			HasUnstagedChanges = 1 << 2,
 
-			HasStagedChanges = 1 << 3,
-			HasUnstagedChanges = 1 << 4,
+			Deleted = 1 << 3,
+			Renamed = 1 << 4,
 
-			Deleted = 1 << 5,
-			Renamed = 1 << 6,
-			Copied = 1 << 7,
-
-			Unmerged = 1 << 8
+			Unresolved = 1 << 5
 		}
 	}
 }

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   viewBox="0 0 32 32"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="git-icons.svg"
+   inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\untracked.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.313709"
+     inkscape:cx="23.252345"
+     inkscape:cy="3.857347"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1672"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="bg"
+     style="display:inline">
+    <rect
+       style="opacity:1;fill:#666666;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4154"
+       width="32.076519"
+       height="32.058094"
+       x="-0.033372022"
+       y="-0.038365316"
+       rx="0"
+       ry="0" />
+  </g>
+  <g
+     inkscape:label="unknown"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1020.3622)"
+     style="display:inline">
+    <path
+       style="fill:#5599ff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 7.1687184,1031.3736 5.1478926,0.062 c 0.04229,-1.4083 1.007686,-3.8271 3.944766,-3.9291 2.93708,-0.1016 4.059948,1.854 3.909611,4.0497 -0.150336,2.1958 -3.468855,2.774 -5.293505,4.4155 -1.824651,1.6413 -2.664175,3.7294 -2.630476,5.5989 l 6.288873,0.023 c 0.06273,-1.8535 0.987914,-2.7436 2.505885,-3.7625 1.517972,-1.019 4.523743,-1.8933 4.57755,-6.3007 0.05381,-4.4074 -1.867659,-9.3699 -9.273919,-9.3743 -7.406259,0 -9.499178,5.3842 -9.1766776,9.218 z"
+       id="path4136"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cczzzcczzzcc" />
+    <circle
+       style="opacity:1;fill:#5599ff;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="path4138"
+       cx="15.333654"
+       cy="1046.5814"
+       r="3.46051" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="modified"
+     style="display:none">
+    <path
+       style="opacity:1;fill:#ffcc00;fill-opacity:1;stroke:none;stroke-opacity:1"
+       d="M 21.185228,4.1003507 23.159969,4.0222067 25.626666,5.8462421 26.09451,7.763039 14.021137,23.94558 12.953605,24.461754 6.8728195,28.180633 8.958385,21.447503 9.2229611,20.133971 Z"
+       id="rect4204"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccccc" />
+    <path
+       sodipodi:nodetypes="cccccccccc"
+       inkscape:connector-curvature="0"
+       id="path4164"
+       d="m 9.0111209,20.942984 1.6934911,-0.179702 2.466697,1.824036 0.258477,1.635221 -0.288681,0.286095 -3.4053471,2.174388 -2.8629384,1.497616 0.7402929,-3.212826 1.2124601,-3.590616 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1" />
+    <path
+       style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 23.161327,4.0218624 22.87516,4.0313724 10.237219,20.594407 10.72829,20.728336 23.293269,4.1184671 Z"
+       id="path4235"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 25.478127,5.7337171 12.75954,22.402443 13.250612,22.536372 25.695102,6.0857786 25.622265,5.8354783 Z"
+       id="path4235-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#f4eed7;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 9.2070756,20.148313 c 0,0 1.2192624,-0.129241 2.8194974,1.020624 1.600235,1.149865 1.990639,2.798455 1.990639,2.798455 l -0.812094,0.774847 -3.4697404,1.938156 c 0,0 -0.1405383,-0.692094 -0.7940788,-1.223229 C 8.2877582,24.926031 7.6101532,24.966267 7.6101532,24.966267 l 0.9730921,-3.668715 z"
+       id="path4252"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="czccczccc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="modified_added"
+     style="display:none">
+    <rect
+       style="display:inline;opacity:1;fill:#00d400;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4149-4"
+       width="4.0193834"
+       height="13.127136"
+       x="20.866386"
+       y="16.723866"
+       rx="0.39306095"
+       ry="0.48376736"
+       inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\rect4149.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="display:inline;opacity:1;fill:#00d400;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4149-8-9"
+       width="3.9267976"
+       height="13.127173"
+       x="21.430117"
+       y="-29.311781"
+       rx="0.51406682"
+       ry="0.51467079"
+       transform="matrix(0.00456809,0.99998957,-0.99998436,0.00559232,0,0)"
+       inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\rect4149.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="added"
+     style="display:none">
+    <rect
+       style="opacity:1;fill:#00d400;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4149"
+       width="8.3928566"
+       height="27.410717"
+       x="11.908811"
+       y="2.1001179"
+       rx="0.82074893"
+       ry="1.0101526"
+       inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\rect4149.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="opacity:1;fill:#00d400;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4149-8"
+       width="8.1995296"
+       height="27.410795"
+       x="11.750645"
+       y="-29.693838"
+       rx="1.0734206"
+       ry="1.0746819"
+       transform="matrix(0.00456809,0.99998957,-0.99998436,0.00559232,0,0)"
+       inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\rect4149.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="unresolved"
+     style="display:none">
+    <path
+       style="fill:#ff0000;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 15.133929,4.0312499 c 0.443261,-0.767043 1.322335,-0.9384964 1.875,0.022321 L 29.642857,26.017857 c 0.527406,0.983197 0.206361,1.820047 -1.00605,1.791131 L 2.9802393,27.803807 C 2.1541791,27.803424 1.8100823,27.102211 2.190208,26.429781 Z"
+       id="path4182"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssccccs"
+       inkscape:export-filename="C:\Users\Jonas\Code\Private\unity-git-integration\Assets\Plugins\git-integration\Resources\GitIcons\conflicted.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 13.889596,11.888129 4.356285,0.06496 -0.76255,8.501891 c -1.120916,-0.298877 -1.77044,-0.409877 -2.891356,0.01431 z"
+       id="path4184"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="path4186"
+       cx="15.929813"
+       cy="23.216843"
+       r="1.983084" />
+  </g>
+</svg>
