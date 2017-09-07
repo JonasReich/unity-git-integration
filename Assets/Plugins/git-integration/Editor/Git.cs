@@ -71,7 +71,11 @@ namespace GitIntegration
 				bool isMatchingFolderMetaFile = file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""));
 				if (isMatchingFile || isMatchingFolderMetaFile)
 				{
-					if (file.HasStatus(EStatus.Untracked))
+					if (file.HasStatus(EStatus.Unresolved))
+					{
+						GUI.DrawTexture(selectionRect, unresolvedTexture);
+					}
+					else if (file.HasStatus(EStatus.Untracked))
 					{
 						GUI.DrawTexture(selectionRect, untrackedTexture);
 					}
@@ -257,7 +261,9 @@ namespace GitIntegration
 			/// </summary>
 			public void UpdateStatus()
 			{
-				if (status_string[0] == '!')
+				if (status_string.Contains("U") || status_string == "AA" || status_string == "DD")
+					status |= (uint)EStatus.Unresolved;
+				else if (status_string[0] == '!')
 					status |= (uint)EStatus.Ignored;
 				else if (status_string[0] == '?')
 					status |= (uint)EStatus.Untracked;
@@ -267,8 +273,6 @@ namespace GitIntegration
 					status |= (uint)EStatus.Deleted;
 				else if (status_string[0] != ' ')
 					status |= (uint)EStatus.HasStagedChanges;
-				else if (status_string.Contains("U") || status_string == "AA" || status_string == "DD")
-					status |= (uint)EStatus.Unresolved;
 				
 				if (status_string[1] != ' ' && status_string[1] != '!')
 					status |= (uint)EStatus.HasUnstagedChanges;
