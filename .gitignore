@@ -17,3 +17,6 @@
 *.csproj*
 *.pidb
 *.unitypackage*
+
+# test
+Assets/ignored-testfolder

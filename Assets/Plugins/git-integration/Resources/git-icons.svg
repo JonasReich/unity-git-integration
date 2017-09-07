@@ -28,11 +28,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313709"
-     inkscape:cx="23.252345"
-     inkscape:cy="3.857347"
+     inkscape:zoom="16.000001"
+     inkscape:cx="36.643842"
+     inkscape:cy="24.09423"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer7"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
@@ -72,7 +72,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-1020.3622)"
-     style="display:inline">
+     style="display:none">
     <path
        style="fill:#5599ff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 7.1687184,1031.3736 5.1478926,0.062 c 0.04229,-1.4083 1.007686,-3.8271 3.944766,-3.9291 2.93708,-0.1016 4.059948,1.854 3.909611,4.0497 -0.150336,2.1958 -3.468855,2.774 -5.293505,4.4155 -1.824651,1.6413 -2.664175,3.7294 -2.630476,5.5989 l 6.288873,0.023 c 0.06273,-1.8535 0.987914,-2.7436 2.505885,-3.7625 1.517972,-1.019 4.523743,-1.8933 4.57755,-6.3007 0.05381,-4.4074 -1.867659,-9.3699 -9.273919,-9.3743 -7.406259,0 -9.499178,5.3842 -9.1766776,9.218 z"
@@ -85,6 +85,31 @@
        cx="15.333654"
        cy="1046.5814"
        r="3.46051" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="ignored">
+    <path
+       style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 3.5846947,16.323144 c 0,0 4.7481064,-6.700599 11.8037033,-6.700599 7.055597,0 12.735575,6.833723 12.735575,6.833723 0,0 -5.679978,7.144347 -12.469325,7.055597 C 8.8652989,23.423116 3.5846947,16.323144 3.5846947,16.323144 Z"
+       id="path4154"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cscsc" />
+    <circle
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:1.66172516;stroke-opacity:1"
+       id="path4156"
+       cx="15.676834"
+       cy="16.300955"
+       r="4.6633496" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#666666;stroke-width:1.08153486;stroke-opacity:1"
+       id="rect4158"
+       width="27.84874"
+       height="2.1189947"
+       x="-13.888942"
+       y="21.592171"
+       transform="matrix(0.72114802,-0.69278101,0.69278101,0.72114802,0,0)" />
   </g>
   <g
      inkscape:groupmode="layer"

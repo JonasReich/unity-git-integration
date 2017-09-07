@@ -22,7 +22,7 @@ namespace GitIntegration
 		public static Process process;
 		public static List<File> files = new List<File>();
 
-		static Texture addedTexture, modifiedTexture, modifiedAddedTexture, unresolvedTexture, untrackedTexture;
+		static Texture addedTexture, ignoredTexture, modifiedTexture, modifiedAddedTexture, unresolvedTexture, untrackedTexture;
 		static bool dirty = false;
 		static string currentSelectionPath = "";
 
@@ -35,6 +35,7 @@ namespace GitIntegration
 				dirty = true;
 			};
 			addedTexture = Resources.Load<Texture>("GitIcons/added");
+			ignoredTexture = Resources.Load<Texture>("GitIcons/ignored");
 			modifiedTexture = Resources.Load<Texture>("GitIcons/modified");
 			modifiedAddedTexture = Resources.Load<Texture>("GitIcons/modifiedAdded");
 			unresolvedTexture = Resources.Load<Texture>("GitIcons/unresolved");
@@ -63,7 +64,7 @@ namespace GitIntegration
 
 			if (process != null && process.HasExited == false)
 			{
-				if (process.StartInfo.Arguments.Contains("status --porcelain"))
+				if (process.StartInfo.Arguments.Contains("status --porcelain --ignored"))
 				{
 					string line = "";
 
@@ -93,19 +94,27 @@ namespace GitIntegration
 						{
 							file.isUnityFile = true;
 						}
+						if (AssetDatabase.IsValidFolder(file.path.Replace(".meta", "")))
+						{
+							file.isFolder = true;
+						}
 						if (file.path.EndsWith(".meta"))
 						{
 							file.isMetaFile = true;
 						}
 
 						file.path = "\"" + file.path + "\"";
-						
+
 						if (file.status_string.StartsWith("#"))
 						{
 							continue;
 						}
-						
-						if (file.status_string[0] == '?')
+
+						if (file.status_string[0] == '!')
+						{
+							file.status |= (uint)EStatus.Ignored;
+						}
+						else if (file.status_string[0] == '?')
 						{
 							file.status |= (uint)EStatus.Untracked;
 						}
@@ -123,7 +132,7 @@ namespace GitIntegration
 							file.status |= (uint)EStatus.Deleted;
 						}
 
-						if (line[1] != ' ')
+						if (line[1] != ' ' && line[1] != '!')
 						{
 							file.status |= (uint)EStatus.HasUnstagedChanges;
 						}
@@ -187,7 +196,7 @@ namespace GitIntegration
 
 		public static void RefreshStatus()
 		{
-			Command("status --porcelain", false);
+			Command("status --porcelain --ignored", false);
 			files.Clear();
 		}
 
@@ -198,7 +207,7 @@ namespace GitIntegration
 			{
 				Command("add " + file.path + " " + file.path.Replace(".meta", ""));
 			}
-			else if(file.isUnityFile)
+			else if (file.isUnityFile)
 			{
 				Command("add " + file.path + " \"" + file.path.Replace("\"", "") + ".meta\"");
 			}
@@ -229,20 +238,12 @@ namespace GitIntegration
 		static void ProjectWindowItemOnGui(string guid, Rect selectionRect)
 		{
 			var path = AssetDatabase.GUIDToAssetPath(guid);
-			//if (AssetDatabase.IsValidFolder(path)) return;
 
 			selectionRect.height = selectionRect.width = 16;
-
 			foreach (var file in files)
 			{
-				if (path.Contains(file.path.Replace("\"", "")))
+				if (path.Contains(file.path.Replace("\"", "")) || (file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""))))
 				{
-					/*
-					GUIStyle style = new GUIStyle("Box");
-					style.fontSize = 8;
-					style.fontStyle = FontStyle.Bold;
-					GUI.Box(selectionRect, file.status_string, style);
-					*/
 					if (file.HasStatus(EStatus.Untracked))
 					{
 						GUI.DrawTexture(selectionRect, untrackedTexture);
@@ -262,6 +263,10 @@ namespace GitIntegration
 					{
 						GUI.DrawTexture(selectionRect, modifiedTexture);
 					}
+					else if (file.HasStatus(EStatus.Ignored))
+					{
+						GUI.DrawTexture(selectionRect, ignoredTexture);
+					}
 				}
 			}
 		}
@@ -273,8 +278,7 @@ namespace GitIntegration
 			public string path;
 			public string status_string;
 			public uint status = (uint)EStatus.None;
-			public bool isUnityFile;
-			public bool isMetaFile;
+			public bool isUnityFile, isMetaFile, isFolder;
 
 			public bool HasStatus(EStatus status)
 			{
@@ -294,7 +298,9 @@ namespace GitIntegration
 			Deleted = 1 << 3,
 			Renamed = 1 << 4,
 
-			Unresolved = 1 << 5
+			Unresolved = 1 << 5,
+
+			Ignored = 1 << 6
 		}
 	}
 }

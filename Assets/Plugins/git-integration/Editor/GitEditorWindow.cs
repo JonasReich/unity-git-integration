@@ -37,7 +37,7 @@ namespace GitIntegration
 		{
 			if (GUILayout.Button("test"))
 			{
-				Git.Command("status --porcelain");
+				Git.RefreshStatus();
 			}
 
 			EditorGUILayout.Space();
