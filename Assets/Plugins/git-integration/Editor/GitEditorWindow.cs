@@ -61,7 +61,7 @@ namespace GitIntegration
 			GUILayout.Label("Staged Changes");
 			if (GUILayout.Button(new GUIContent("-", "Unstage all files"), GUILayout.Width(20)) && Git.IsReady())
 			{
-				Git.Command("reset .");
+				Git.Command(Git.ECommand.Reset);
 				repaintAsap = true;
 			}
 			EditorGUILayout.EndHorizontal();
@@ -75,7 +75,7 @@ namespace GitIntegration
 					GUILayout.Label(gitFile.name, GUILayout.Width(300));
 					if (GUILayout.Button("-", GUILayout.Width(20)))
 					{
-						Git.Reset(gitFile);
+						Git.Command(Git.ECommand.Reset, gitFile);
 						EditorGUILayout.EndHorizontal();
 						repaintAsap = true;
 						break;
@@ -92,7 +92,7 @@ namespace GitIntegration
 			GUILayout.Label("Changes");
 			if (GUILayout.Button(new GUIContent("+", "Stage all changed files"), GUILayout.Width(20)) && Git.IsReady())
 			{
-				Git.Command("add .");
+				Git.Command(Git.ECommand.Add);
 				repaintAsap = true;
 			}
 			EditorGUILayout.EndHorizontal();
@@ -106,7 +106,7 @@ namespace GitIntegration
 					GUILayout.Label(gitFile.name, GUILayout.Width(300));
 					if (GUILayout.Button("+", GUILayout.Width(20)))
 					{
-						Git.Add(gitFile);
+						Git.Command(Git.ECommand.Add, gitFile);
 						EditorGUILayout.EndHorizontal();
 						repaintAsap = true;
 						break;
@@ -127,7 +127,7 @@ namespace GitIntegration
 				{
 					if (commitMessage != "")
 					{
-						Git.Command("commit -m \"" + commitMessage + "\"");
+						Git.CommandExplicit("commit -m \"" + commitMessage + "\"");
 						commitMessage = "";
 						repaintAsap = true;
 					}

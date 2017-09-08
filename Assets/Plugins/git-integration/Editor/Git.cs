@@ -43,8 +43,15 @@ namespace GitIntegration
 		{
 			return (process != null && process.HasExited == true) || process == null;
 		}
+		
+		public static void RefreshStatus()
+		{
+			CommandExplicit("status --porcelain --ignored", false);
+			files.Clear();
+		}
 
-		public static void Command(string arguments, bool setDirty = true)
+
+		public static void CommandExplicit(string arguments, bool setDirty = true)
 		{
 			process = new Process();
 			process.StartInfo.FileName = "git";
@@ -62,45 +69,26 @@ namespace GitIntegration
 				dirty = true;
 		}
 
-		public static void RefreshStatus()
+
+		public static void Command(ECommand command)
 		{
-			Command("status --porcelain --ignored", false);
-			files.Clear();
+			CommandExplicit(CommandList[(int)command] + " .");
 		}
 
-
-		public static void Add(File file)
+		public static void Command(ECommand command, File file)
 		{
-			Command("add " + file.GetPaths());
+			CommandExplicit(CommandList[(int)command] + " " + file.GetPaths());
 		}
 
-		public static void Add(ICollection<File> files)
-		{
-			string fileList = "";
-			foreach (File file in files)
-			{
-				fileList += file.GetPaths() + " ";
-			}
-			Command("add " + fileList);
-		}
-
-
-		public static void Reset(File file)
-		{
-			Command("reset " + file.GetPaths());
-		}
-
-		public static void Reset(ICollection<File> files)
+		public static void Command(ECommand command, ICollection<File> files)
 		{
 			string fileList = "";
 			foreach (File file in files)
-			{
 				fileList += file.GetPaths() + " ";
-			}
-			Command("reset " + fileList);
+			CommandExplicit(CommandList[(int)command] + " " + fileList);
 		}
 
-
+		
 		static void ReadGitOutput()
 		{
 			if (process.StartInfo.Arguments.Contains("status --porcelain --ignored"))
@@ -183,7 +171,6 @@ namespace GitIntegration
 		}
 
 
-
 		public class File
 		{
 			public string name;
@@ -245,5 +232,19 @@ namespace GitIntegration
 
 			Ignored = 1 << 6
 		}
+
+		public enum ECommand
+		{
+			Add,
+			Reset,
+			Diff
+		}
+
+		static readonly string[] CommandList =
+		{
+			"add",
+			"reset",
+			"difftool --no-prompt"
+		};
 	}
 }

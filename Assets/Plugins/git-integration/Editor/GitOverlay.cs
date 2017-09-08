@@ -108,32 +108,7 @@ namespace GitIntegration
 			currentSelectionPath = path;
 			return true;
 		}
-
 		
-
-		[MenuItem("Assets/Git/Add", true)]
-		public static bool AddValidate()
-		{
-			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasUnstagedChanges)).Count > 0;
-		}
-
-		[MenuItem("Assets/Git/Add", false)]
-		public static void Add()
-		{
-			Git.Add(FindSelectedGitFiles(file => file.HasStatus(EStatus.HasUnstagedChanges)));
-		}
-
-		[MenuItem("Assets/Git/Reset", true)]
-		public static bool ResetValidate()
-		{
-			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges)).Count > 0;
-		}
-
-		[MenuItem("Assets/Git/Reset", false)]
-		public static void Reset()
-		{
-			Git.Reset(FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges)));
-		}
 
 		static List<Git.File> FindSelectedGitFiles(Func<Git.File, bool> conditionFunction)
 		{
@@ -156,6 +131,43 @@ namespace GitIntegration
 				}
 			}
 			return files;
+		}
+
+
+		[MenuItem("Assets/Git/Add", true)]
+		public static bool AddValidate()
+		{
+			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasUnstagedChanges)).Count > 0;
+		}
+
+		[MenuItem("Assets/Git/Add", false)]
+		public static void Add()
+		{
+			Git.Command(Git.ECommand.Add, FindSelectedGitFiles(file => file.HasStatus(EStatus.HasUnstagedChanges)));
+		}
+
+		[MenuItem("Assets/Git/Reset", true)]
+		public static bool ResetValidate()
+		{
+			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges)).Count > 0;
+		}
+
+		[MenuItem("Assets/Git/Reset", false)]
+		public static void Reset()
+		{
+			Git.Command(Git.ECommand.Reset, FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges)));
+		}
+
+		[MenuItem("Assets/Git/Diff", true)]
+		public static bool DiffValidate()
+		{
+			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges) || file.HasStatus(EStatus.HasUnstagedChanges)).Count > 0;
+		}
+
+		[MenuItem("Assets/Git/Diff", false)]
+		public static void Diff()
+		{
+			Git.Command(Git.ECommand.Diff, FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges) || file.HasStatus(EStatus.HasUnstagedChanges)));
 		}
 	}
 }
