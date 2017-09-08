@@ -39,6 +39,7 @@ namespace GitIntegration
 			}
 
 			Git.Update();
+			GitOverlay.Update();
 		}
 
 		void OnGUI()

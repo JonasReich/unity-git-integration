@@ -22,85 +22,23 @@ namespace GitIntegration
 		public static Process process;
 		public static List<File> files = new List<File>();
 
-		static Texture addedTexture, ignoredTexture, modifiedTexture, modifiedAddedTexture, unresolvedTexture, untrackedTexture;
-		static bool dirty = false;
-		static string currentSelectionPath = "";
+		public static bool dirty = false;
+
 
 
 		static Git()
 		{
-			EditorApplication.projectWindowItemOnGUI += ProjectWindowItemOnGui;
-			EditorApplication.projectWindowChanged += delegate { dirty = true; };
 			
-			addedTexture = Resources.Load<Texture>("GitIcons/added");
-			ignoredTexture = Resources.Load<Texture>("GitIcons/ignored");
-			modifiedTexture = Resources.Load<Texture>("GitIcons/modified");
-			modifiedAddedTexture = Resources.Load<Texture>("GitIcons/modifiedAdded");
-			unresolvedTexture = Resources.Load<Texture>("GitIcons/unresolved");
-			untrackedTexture = Resources.Load<Texture>("GitIcons/untracked");
-
 			RefreshStatus();
 		}
 
 
 		public static void Update()
 		{
-			if (dirty && IsReady())
-			{
-				dirty = false;
-				RefreshStatus();
-				if (GitEditorWindow.Window)
-					GitEditorWindow.Window.Repaint();
-			}
-
-			if (UpdateCurrentSelectionPath())
-				dirty = true;
-
-			if (process != null && process.HasExited == false)
-				ReadGitOutput();
+			if (Git.process != null && Git.process.HasExited == false)
+				Git.ReadGitOutput();
 		}
-
-		static void ProjectWindowItemOnGui(string guid, Rect selectionRect)
-		{
-			var path = AssetDatabase.GUIDToAssetPath(guid);
-
-			selectionRect.height = selectionRect.width = 16;
-			foreach (var file in files)
-			{
-				bool isMatchingFile = path.Contains(file.path.Replace("\"", ""));
-				bool isMatchingFolderMetaFile = file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""));
-				if (isMatchingFile || isMatchingFolderMetaFile)
-				{
-					if (file.HasStatus(EStatus.Unresolved))
-					{
-						GUI.DrawTexture(selectionRect, unresolvedTexture);
-					}
-					else if (file.HasStatus(EStatus.Untracked))
-					{
-						GUI.DrawTexture(selectionRect, untrackedTexture);
-					}
-					else if (file.HasStatus(EStatus.HasStagedChanges))
-					{
-						if (file.HasStatus(EStatus.HasUnstagedChanges))
-						{
-							GUI.DrawTexture(selectionRect, modifiedAddedTexture);
-						}
-						else
-						{
-							GUI.DrawTexture(selectionRect, addedTexture);
-						}
-					}
-					else if (file.HasStatus(EStatus.HasUnstagedChanges))
-					{
-						GUI.DrawTexture(selectionRect, modifiedTexture);
-					}
-					else if (file.HasStatus(EStatus.Ignored))
-					{
-						GUI.DrawTexture(selectionRect, ignoredTexture);
-					}
-				}
-			}
-		}
+		
 
 		
 		public static bool IsReady()
@@ -225,23 +163,7 @@ namespace GitIntegration
 			return file;
 		}
 
-		/// <summary>
-		/// Update the currentSelectionPath member 
-		/// </summary>
-		/// <returns>
-		/// Has currentSelectionPath changed?
-		/// </returns>
-		static bool UpdateCurrentSelectionPath()
-		{
-			string path = (Selection.activeObject == null) ? "Assets" : AssetDatabase.GetAssetPath(Selection.activeObject.GetInstanceID());
-
-			if (currentSelectionPath == path)
-				return false;
-
-			currentSelectionPath = path;
-			return true;
-		}
-
+		
 
 		public class File
 		{
