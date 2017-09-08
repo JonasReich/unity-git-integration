@@ -25,10 +25,8 @@ namespace GitIntegration
 		public static bool dirty = false;
 
 
-
 		static Git()
 		{
-			
 			RefreshStatus();
 		}
 
@@ -38,9 +36,9 @@ namespace GitIntegration
 			if (Git.process != null && Git.process.HasExited == false)
 				Git.ReadGitOutput();
 		}
-		
 
-		
+
+
 		public static bool IsReady()
 		{
 			return (process != null && process.HasExited == true) || process == null;
@@ -73,15 +71,36 @@ namespace GitIntegration
 
 		public static void Add(File file)
 		{
-			if (file.isMetaFile)
-				Command("add " + file.path + " " + file.path.Replace(".meta", ""));
-			else if (file.isUnityFile)
-				Command("add " + file.path + " \"" + file.path.Replace("\"", "") + ".meta\"");
-			else
-				Command("add " + file.path);
+			Command("add " + file.GetPaths());
 		}
-		
-		
+
+		public static void Add(ICollection<File> files)
+		{
+			string fileList = "";
+			foreach (File file in files)
+			{
+				fileList += file.GetPaths() + " ";
+			}
+			Command("add " + fileList);
+		}
+
+
+		public static void Reset(File file)
+		{
+			Command("reset " + file.GetPaths());
+		}
+
+		public static void Reset(ICollection<File> files)
+		{
+			string fileList = "";
+			foreach (File file in files)
+			{
+				fileList += file.GetPaths() + " ";
+			}
+			Command("reset " + fileList);
+		}
+
+
 		static void ReadGitOutput()
 		{
 			if (process.StartInfo.Arguments.Contains("status --porcelain --ignored"))
@@ -163,7 +182,7 @@ namespace GitIntegration
 			return file;
 		}
 
-		
+
 
 		public class File
 		{
@@ -195,9 +214,18 @@ namespace GitIntegration
 					status |= (uint)EStatus.Deleted;
 				else if (status_string[0] != ' ')
 					status |= (uint)EStatus.HasStagedChanges;
-				
+
 				if (status_string[1] != ' ' && status_string[1] != '!')
 					status |= (uint)EStatus.HasUnstagedChanges;
+			}
+
+			public string GetPaths()
+			{
+				if (isMetaFile)
+					return path + " " + path.Replace(".meta", "");
+				if (isUnityFile)
+					return path + " \"" + path.Replace("\"", "") + ".meta\"";
+				return path;
 			}
 		}
 

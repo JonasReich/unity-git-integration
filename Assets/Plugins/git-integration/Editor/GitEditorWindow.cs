@@ -75,7 +75,7 @@ namespace GitIntegration
 					GUILayout.Label(gitFile.name, GUILayout.Width(300));
 					if (GUILayout.Button("-", GUILayout.Width(20)))
 					{
-						Git.Command("reset " + gitFile.path);
+						Git.Reset(gitFile);
 						EditorGUILayout.EndHorizontal();
 						repaintAsap = true;
 						break;

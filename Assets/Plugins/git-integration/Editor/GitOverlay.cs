@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using EStatus = GitIntegration.Git.EStatus;
@@ -105,6 +106,55 @@ namespace GitIntegration
 
 			currentSelectionPath = path;
 			return true;
+		}
+
+		[MenuItem("Assets/Git/Add", true)]
+		public static bool GitContextValidate()
+		{
+			string path = "Assets";
+			foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
+			{
+				path = AssetDatabase.GetAssetPath(obj);
+				foreach (var file in Git.files)
+				{
+					bool isMatchingFile = path.Contains(file.path.Replace("\"", ""));
+					bool isMatchingFolderMetaFile = file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""));
+					if (isMatchingFile || isMatchingFolderMetaFile)
+					{
+						if (file.HasStatus(EStatus.HasUnstagedChanges))
+						{
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+
+		[MenuItem("Assets/Git/Add", false)]
+		public static void GitContext()
+		{
+			List<Git.File> files = new List<Git.File>();
+
+			string path = "Assets";
+			foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
+			{
+				path = AssetDatabase.GetAssetPath(obj);
+				foreach (var file in Git.files)
+				{
+					bool isMatchingFile = path.Contains(file.path.Replace("\"", ""));
+					bool isMatchingFolderMetaFile = file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""));
+					if (isMatchingFile || isMatchingFolderMetaFile)
+					{
+						if (file.HasStatus(EStatus.HasUnstagedChanges))
+						{
+							files.Add(file);
+						}
+					}
+				}
+			}
+
+			Git.Add(files);
 		}
 
 	}
