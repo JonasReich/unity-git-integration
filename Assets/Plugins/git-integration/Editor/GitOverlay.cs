@@ -2,6 +2,7 @@
 // (c) 2017 - Jonas Reich
 //-------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -108,54 +109,53 @@ namespace GitIntegration
 			return true;
 		}
 
+		
+
 		[MenuItem("Assets/Git/Add", true)]
-		public static bool GitContextValidate()
+		public static bool AddValidate()
 		{
-			string path = "Assets";
-			foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
-			{
-				path = AssetDatabase.GetAssetPath(obj);
-				foreach (var file in Git.files)
-				{
-					bool isMatchingFile = path.Contains(file.path.Replace("\"", ""));
-					bool isMatchingFolderMetaFile = file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""));
-					if (isMatchingFile || isMatchingFolderMetaFile)
-					{
-						if (file.HasStatus(EStatus.HasUnstagedChanges))
-						{
-							return true;
-						}
-					}
-				}
-			}
-			return false;
+			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasUnstagedChanges)).Count > 0;
 		}
 
 		[MenuItem("Assets/Git/Add", false)]
-		public static void GitContext()
+		public static void Add()
+		{
+			Git.Add(FindSelectedGitFiles(file => file.HasStatus(EStatus.HasUnstagedChanges)));
+		}
+
+		[MenuItem("Assets/Git/Reset", true)]
+		public static bool ResetValidate()
+		{
+			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges)).Count > 0;
+		}
+
+		[MenuItem("Assets/Git/Reset", false)]
+		public static void Reset()
+		{
+			Git.Reset(FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges)));
+		}
+
+		static List<Git.File> FindSelectedGitFiles(Func<Git.File, bool> conditionFunction)
 		{
 			List<Git.File> files = new List<Git.File>();
 
-			string path = "Assets";
 			foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
 			{
-				path = AssetDatabase.GetAssetPath(obj);
+				var path = AssetDatabase.GetAssetPath(obj);
 				foreach (var file in Git.files)
 				{
 					bool isMatchingFile = path.Contains(file.path.Replace("\"", ""));
 					bool isMatchingFolderMetaFile = file.isMetaFile && file.isFolder && path.Contains(file.path.Replace(".meta\"", ""));
 					if (isMatchingFile || isMatchingFolderMetaFile)
 					{
-						if (file.HasStatus(EStatus.HasUnstagedChanges))
+						if (conditionFunction(file))
 						{
 							files.Add(file);
 						}
 					}
 				}
 			}
-
-			Git.Add(files);
+			return files;
 		}
-
 	}
 }
