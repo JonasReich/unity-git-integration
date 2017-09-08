@@ -13,7 +13,7 @@ using EStatus = GitIntegration.Git.EStatus;
 namespace GitIntegration
 {
 	/// <summary>
-	/// 
+	/// Manages everything related to the visualization of git status + context menu entries in the project browser
 	/// </summary>
 	[InitializeOnLoad]
 	public static class GitOverlay

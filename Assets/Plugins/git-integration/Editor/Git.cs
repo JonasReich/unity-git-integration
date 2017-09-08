@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 namespace GitIntegration
 {
 	/// <summary>
-	/// 
+	/// Unity/C# friendly interface for the git client
 	/// </summary>
 	[InitializeOnLoad]
 	public static class Git
@@ -36,8 +36,7 @@ namespace GitIntegration
 			if (Git.process != null && Git.process.HasExited == false)
 				Git.ReadGitOutput();
 		}
-
-
+		
 
 		public static bool IsReady()
 		{

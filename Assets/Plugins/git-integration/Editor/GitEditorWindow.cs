@@ -12,7 +12,7 @@ using Debug = UnityEngine.Debug;
 namespace GitIntegration
 {
 	/// <summary>
-	/// 
+	/// Next to changelists and log output this editor window is responsible for sending Update events to Git and GitOverlay
 	/// </summary>
 	public class GitEditorWindow : EditorWindow
 	{
