@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -33,8 +34,8 @@ namespace GitIntegration
 
 		public static void Update()
 		{
-			if (Git.process != null && Git.process.HasExited == false)
-				Git.ReadGitOutput();
+			if (process != null && process.HasExited == false)
+				ReadGitOutput();
 		}
 		
 
@@ -141,6 +142,11 @@ namespace GitIntegration
 
 			file.path = newLine.Substring(3);
 
+			{
+				var substrings = file.path.Split(new string[] { "->" }, StringSplitOptions.None);
+				file.path = substrings.Last();
+			}
+
 			// Remove quotation marks and whitespace
 			file.path = file.path.Replace("\"", "");
 			file.path = file.path.Trim();
@@ -175,7 +181,7 @@ namespace GitIntegration
 			public string name;
 			public string path;
 			public string status_string;
-			public uint status = (uint)EStatus.None;
+			public uint status = 0;
 			public bool isUnityFile, isMetaFile, isFolder;
 
 			public bool HasStatus(EStatus status)
@@ -195,7 +201,10 @@ namespace GitIntegration
 				else if (status_string[0] == '?')
 					status |= (uint)EStatus.Untracked;
 				else if (status_string[0] == 'R')
+				{
+					status |= (uint)EStatus.HasStagedChanges;
 					status |= (uint)EStatus.Renamed;
+				}
 				else if (status_string[0] == 'D')
 					status |= (uint)EStatus.Deleted;
 				else if (status_string[0] != ' ')
@@ -218,7 +227,6 @@ namespace GitIntegration
 		[Flags]
 		public enum EStatus : uint
 		{
-			None = 0,
 			Untracked = 1 << 0,
 
 			HasStagedChanges = 1 << 1,
@@ -243,7 +251,7 @@ namespace GitIntegration
 		{
 			"add",
 			"reset",
-			"difftool --no-prompt"
+			"difftool --no-prompt HEAD"
 		};
 	}
 }

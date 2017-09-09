@@ -18,7 +18,9 @@ namespace GitIntegration
 	[InitializeOnLoad]
 	public static class GitOverlay
 	{
-		static Texture addedTexture, ignoredTexture, modifiedTexture, modifiedAddedTexture, unresolvedTexture, untrackedTexture;
+		const string STATUS_ICON_FOLDER = "GitIcons/status/";
+
+		static Texture addedTexture, ignoredTexture, modifiedTexture, modifiedAddedTexture, movedTexture, unresolvedTexture, untrackedTexture;
 		static string currentSelectionPath = "";
 
 		static GitOverlay()
@@ -26,13 +28,13 @@ namespace GitIntegration
 			EditorApplication.projectWindowItemOnGUI += ProjectWindowItemOnGui;
 			EditorApplication.projectWindowChanged += delegate { Git.dirty = true; };
 
-			addedTexture = Resources.Load<Texture>("GitIcons/added");
-			ignoredTexture = Resources.Load<Texture>("GitIcons/ignored");
-			modifiedTexture = Resources.Load<Texture>("GitIcons/modified");
-			modifiedAddedTexture = Resources.Load<Texture>("GitIcons/modifiedAdded");
-			unresolvedTexture = Resources.Load<Texture>("GitIcons/unresolved");
-			untrackedTexture = Resources.Load<Texture>("GitIcons/untracked");
-
+			addedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "added");
+			ignoredTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "ignored");
+			modifiedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "modified");
+			modifiedAddedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "modifiedAdded");
+			movedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "moved");
+			unresolvedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "unresolved");
+			untrackedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "untracked");
 		}
 
 		public static void Update()
@@ -68,6 +70,10 @@ namespace GitIntegration
 					else if (file.HasStatus(EStatus.Untracked))
 					{
 						GUI.DrawTexture(selectionRect, untrackedTexture);
+					}
+					else if (file.HasStatus(EStatus.Renamed))
+					{
+						GUI.DrawTexture(selectionRect, movedTexture);
 					}
 					else if (file.HasStatus(EStatus.HasStagedChanges))
 					{
@@ -168,6 +174,21 @@ namespace GitIntegration
 		public static void Diff()
 		{
 			Git.Command(Git.ECommand.Diff, FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges) || file.HasStatus(EStatus.HasUnstagedChanges)));
+		}
+
+		[MenuItem("Assets/Git/Info")]
+		public static void Info()
+		{
+			foreach (Git.File file in FindSelectedGitFiles(file => true))
+			{
+				string statusString = "";
+				foreach (EStatus status in Enum.GetValues(typeof(EStatus)))
+				{
+					if (file.HasStatus(status))
+						statusString += status + ", ";
+				}
+				Debug.Log(file.name + " status: " + statusString);
+			}
 		}
 	}
 }
