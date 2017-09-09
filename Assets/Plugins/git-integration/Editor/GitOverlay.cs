@@ -18,7 +18,7 @@ namespace GitIntegration
 	[InitializeOnLoad]
 	public static class GitOverlay
 	{
-		const string STATUS_ICON_FOLDER = "GitIcons/status/";
+		const string ICON_FOLDER = "GitIcons/";
 
 		static Texture addedTexture, ignoredTexture, modifiedTexture, modifiedAddedTexture, movedTexture, unresolvedTexture, untrackedTexture;
 		static string currentSelectionPath = "";
@@ -29,13 +29,13 @@ namespace GitIntegration
 			EditorApplication.projectWindowChanged += delegate { Git.dirty = true; };
 			EditorApplication.update += Update;
 
-			addedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "added");
-			ignoredTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "ignored");
-			modifiedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "modified");
-			modifiedAddedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "modifiedAdded");
-			movedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "moved");
-			unresolvedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "unresolved");
-			untrackedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "untracked");
+			addedTexture = Resources.Load<Texture>(ICON_FOLDER + "added");
+			ignoredTexture = Resources.Load<Texture>(ICON_FOLDER + "ignored");
+			modifiedTexture = Resources.Load<Texture>(ICON_FOLDER + "modified");
+			modifiedAddedTexture = Resources.Load<Texture>(ICON_FOLDER + "modifiedAdded");
+			movedTexture = Resources.Load<Texture>(ICON_FOLDER + "moved");
+			unresolvedTexture = Resources.Load<Texture>(ICON_FOLDER + "unresolved");
+			untrackedTexture = Resources.Load<Texture>(ICON_FOLDER + "untracked");
 		}
 
 		static void Update()
