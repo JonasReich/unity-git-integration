@@ -19,6 +19,7 @@ namespace GitIntegration
 	[InitializeOnLoad]
 	public static class Git
 	{
+		public static string branchInfo;
 		public static string output = "";
 		public static Process process;
 		public static List<File> files = new List<File>();
@@ -49,6 +50,11 @@ namespace GitIntegration
 		{
 			CommandExplicit("status --porcelain --ignored", false);
 			files.Clear();
+		}
+
+		public static void RefreshBranchInfo()
+		{
+			CommandExplicit("branch --verbose", false);
 		}
 
 
@@ -99,6 +105,19 @@ namespace GitIntegration
 					var file = CreateFileFromStatusLine(process.StandardOutput.ReadLine());
 					if (file != null)
 						files.Add(file);
+				}
+				RefreshBranchInfo();
+			}
+			else if (process.StartInfo.Arguments.Contains("branch --verbose"))
+			{
+				while (process.StandardOutput.EndOfStream == false)
+				{
+					var line = process.StandardOutput.ReadLine();
+					if (line.StartsWith("*"))
+					{
+						
+						branchInfo = "On branch" + line.Substring(1);
+					}
 				}
 			}
 			else
@@ -246,7 +265,9 @@ namespace GitIntegration
 			Add,
 			Reset,
 			Diff,
-			Discard
+			Discard,
+			Push,
+			Pull
 		}
 
 		static readonly string[] CommandList =
@@ -254,7 +275,10 @@ namespace GitIntegration
 			"add",
 			"reset",
 			"difftool --no-prompt HEAD",
-			"checkout "
+			"checkout",
+			"push",
+			"pull --rebase"
 		};
+
 	}
 }

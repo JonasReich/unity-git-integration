@@ -42,6 +42,8 @@ namespace GitIntegration
 		void OnGUI()
 		{
 			EditorGUILayout.Space();
+			GUILayout.Box(Git.branchInfo, GUILayout.ExpandWidth(true));
+			EditorGUILayout.Space();
 			StagingArea();
 			EditorGUILayout.Space();
 			ChangesArea();
