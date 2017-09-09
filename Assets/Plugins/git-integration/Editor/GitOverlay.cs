@@ -27,6 +27,7 @@ namespace GitIntegration
 		{
 			EditorApplication.projectWindowItemOnGUI += ProjectWindowItemOnGui;
 			EditorApplication.projectWindowChanged += delegate { Git.dirty = true; };
+			EditorApplication.update += Update;
 
 			addedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "added");
 			ignoredTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "ignored");
@@ -37,7 +38,7 @@ namespace GitIntegration
 			untrackedTexture = Resources.Load<Texture>(STATUS_ICON_FOLDER + "untracked");
 		}
 
-		public static void Update()
+		static void Update()
 		{
 			if (Git.dirty && Git.IsReady())
 			{

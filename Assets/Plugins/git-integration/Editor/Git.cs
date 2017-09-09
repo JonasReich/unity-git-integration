@@ -29,10 +29,11 @@ namespace GitIntegration
 		static Git()
 		{
 			RefreshStatus();
+			EditorApplication.update += Update;
 		}
 
 
-		public static void Update()
+		static void Update()
 		{
 			if (process != null && process.HasExited == false)
 				ReadGitOutput();

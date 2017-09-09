@@ -37,9 +37,6 @@ namespace GitIntegration
 				repaintAsap = false;
 				Repaint();
 			}
-
-			Git.Update();
-			GitOverlay.Update();
 		}
 
 		void OnGUI()
