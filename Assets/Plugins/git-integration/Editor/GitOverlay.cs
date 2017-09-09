@@ -114,7 +114,7 @@ namespace GitIntegration
 			currentSelectionPath = path;
 			return true;
 		}
-		
+
 
 		static List<Git.File> FindSelectedGitFiles(Func<Git.File, bool> conditionFunction)
 		{
@@ -174,6 +174,25 @@ namespace GitIntegration
 		public static void Diff()
 		{
 			Git.Command(Git.ECommand.Diff, FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges) || file.HasStatus(EStatus.HasUnstagedChanges)));
+		}
+
+		[MenuItem("Assets/Git/Discard", true)]
+		public static bool DiscardValidate()
+		{
+			return FindSelectedGitFiles(file => file.HasStatus(EStatus.HasUnstagedChanges)).Count > 0;
+		}
+
+		[MenuItem("Assets/Git/Discard", false)]
+		public static void Discard()
+		{
+			var files = FindSelectedGitFiles(file => file.HasStatus(EStatus.HasStagedChanges) || file.HasStatus(EStatus.HasUnstagedChanges));
+
+			string fileNames = "";
+			foreach (var file in files)
+				fileNames += file.name + ", ";
+
+			if (EditorUtility.DisplayDialog("Discard local changes?", "Are you sure you want to discard your local changes to " + fileNames + "?", "Discard", "Cancel"))
+				Git.Command(Git.ECommand.Discard, files);
 		}
 
 		[MenuItem("Assets/Git/Info")]

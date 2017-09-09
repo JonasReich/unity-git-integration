@@ -80,6 +80,11 @@ namespace GitIntegration
 						repaintAsap = true;
 						break;
 					}
+					if (GUILayout.Button("diff", GUILayout.Width(40)))
+					{
+						Git.Command(Git.ECommand.Diff, gitFile);
+						EditorGUILayout.EndHorizontal();
+					}
 					EditorGUILayout.EndHorizontal();
 				}
 			}
@@ -107,6 +112,18 @@ namespace GitIntegration
 					if (GUILayout.Button("+", GUILayout.Width(20)))
 					{
 						Git.Command(Git.ECommand.Add, gitFile);
+						EditorGUILayout.EndHorizontal();
+						repaintAsap = true;
+						break;
+					}
+					if (GUILayout.Button("diff", GUILayout.Width(40)))
+					{
+						Git.Command(Git.ECommand.Diff, gitFile);
+						EditorGUILayout.EndHorizontal();
+					}
+					if (GUILayout.Button("discard", GUILayout.Width(60)) && EditorUtility.DisplayDialog("Discard local changes?", "Are you sure you want to discard your local changes to " + gitFile.name + "?", "Discard", "Cancel"))
+					{
+						Git.Command(Git.ECommand.Discard, gitFile);
 						EditorGUILayout.EndHorizontal();
 						repaintAsap = true;
 						break;

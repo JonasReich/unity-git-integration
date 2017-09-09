@@ -244,14 +244,16 @@ namespace GitIntegration
 		{
 			Add,
 			Reset,
-			Diff
+			Diff,
+			Discard
 		}
 
 		static readonly string[] CommandList =
 		{
 			"add",
 			"reset",
-			"difftool --no-prompt HEAD"
+			"difftool --no-prompt HEAD",
+			"checkout "
 		};
 	}
 }
