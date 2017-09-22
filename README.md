@@ -1,4 +1,4 @@
-# unity-git-integration
+# unity-git-integration [![GitHub (pre-)release](https://img.shields.io/github/release/JonasReich/unity-git-integration/all.svg)](https://github.com/JonasReich/unity-git-integration/releases/)
 Git Client Plugin for Unity3D
 
 ## Installation
